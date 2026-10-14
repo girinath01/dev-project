@@ -26,6 +26,17 @@ The notebook records the dataset shape, feature names, class distribution, missi
 - `requirements.txt` — Python dependencies
 - `figures/` — generated plots after running the notebook or script
 
+## Visualization resources
+
+The generated image resources are available directly on GitHub:
+
+1. [Diagnostic class distribution](figures/01_class_distribution.png)
+2. [Feature distributions by diagnosis](figures/02_feature_distributions.png)
+3. [Mean-radius boxplot](figures/03_boxplot_mean_radius.png)
+4. [Radius/perimeter scatter plot](figures/04_radius_perimeter_scatter.png)
+5. [Correlation heatmap](figures/05_correlation_heatmap.png)
+6. [PCA projection](figures/06_pca_projection.png)
+
 ## How to run
 
 ```bash
