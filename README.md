@@ -36,6 +36,15 @@ The generated image resources are available directly on GitHub:
 4. [Radius/perimeter scatter plot](figures/04_radius_perimeter_scatter.png)
 5. [Correlation heatmap](figures/05_correlation_heatmap.png)
 6. [PCA projection](figures/06_pca_projection.png)
+7. [Pair plot](figures/07_pairplot_selected_features.png)
+8. [Grouped mean-radius chart](figures/08_grouped_mean_radius_ci.png)
+9. [Grouped concavity violin plot](figures/09_grouped_violin_concavity.png)
+10. [PCA cumulative variance](figures/10_pca_cumulative_variance.png)
+11. [LDA projection](figures/11_lda_projection.png)
+12. [t-SNE projection](figures/12_tsne_projection.png)
+13. [Random-forest confusion matrix](figures/13_random_forest_confusion_matrix.png)
+14. [ROC curves](figures/14_roc_curves.png)
+15. [Random-forest feature importance](figures/15_random_forest_feature_importance.png)
 
 ## How to run
 
@@ -63,3 +72,16 @@ The work is organized to cover the usual five units in an introductory Data Expl
 5. Interpretation, exploratory classification context, limitations, and communication
 
 If the course handout uses different unit names, the same sections can be relabeled to match the official syllabus.
+
+## Unit V lecture implementation
+
+The implementation follows the supplied Unit V lecture topics:
+
+- Pair plots using `seaborn.pairplot`
+- Grouped summaries with `groupby` and grouped bar/violin plots
+- Correlation heatmap and strongest-pair interpretation
+- Standardized PCA, cumulative explained variance, supervised LDA, and t-SNE
+- Scikit-learn estimator workflow with stratified splitting and leakage-safe pipelines
+- Cross-validation, GridSearchCV, classification report, confusion matrix, ROC-AUC, and feature importance
+
+Additional Unit V figures are saved in `figures/` as files `07` through `15`.

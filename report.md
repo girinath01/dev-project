@@ -56,6 +56,25 @@ All 30 predictors are standardized before PCA so variables with large raw units 
 
 The notebook reports the ten features with the largest absolute correlation with a numeric diagnosis code as an exploratory ranking. This ranking is not a model, does not establish causation, and must not be used as a clinical risk score.
 
+## 5. Unit V lecture alignment
+
+The supplied Unit V lecture emphasizes multivariate analysis and scikit-learn model development. The project now implements each requested area:
+
+1. **Pair plots:** a corner pair plot compares six selected measurements and colors observations by diagnosis.
+2. **Grouped visualizations:** diagnosis-level count, mean, median, and standard deviation summaries are printed. A grouped bar chart with 95% confidence intervals and a violin plot show both summary and distribution shape.
+3. **Correlation analysis:** Pearson correlations are visualized with a fixed `-1` to `+1` diverging color scale.
+4. **Dimensionality reduction:** standardized PCA is shown in two dimensions; cumulative explained variance identifies the smallest number of components reaching 95% variance. LDA is included as a supervised class-separation view. t-SNE uses a fixed seed and perplexity 30 and is explicitly treated as a visual diagnostic rather than a predictive feature transformation.
+5. **Scikit-learn model development:** logistic regression, SVM, and random forest are compared with stratified five-fold cross-validation. The code uses pipelines so scaling is fitted within each training fold. GridSearchCV tunes an SVM, and the final evaluation includes a classification report, confusion matrix, ROC curves, ROC-AUC, and random-forest feature importance.
+
+The run produced these reproducible reference values:
+
+- 10 PCA components are needed to retain at least 95% cumulative variance.
+- t-SNE silhouette score is 0.466 for the fixed visualization configuration.
+- Cross-validation accuracy is approximately 0.974 for logistic regression, 0.977 for SVM, and 0.953 for random forest.
+- Test ROC-AUC is approximately 0.995 for logistic regression and SVM, and 0.994 for random forest.
+
+These values describe this dataset and split, not expected clinical performance.
+
 ## 5. Visualizations included
 
 1. Diagnostic class distribution
@@ -64,6 +83,15 @@ The notebook reports the ten features with the largest absolute correlation with
 4. Mean-radius versus mean-perimeter scatter plot
 5. Correlation heatmap
 6. Standardized PCA projection
+7. Pair plot of selected measurements
+8. Grouped mean-radius chart with confidence intervals
+9. Grouped concavity violin plot
+10. PCA cumulative explained variance
+11. LDA supervised projection
+12. t-SNE projection
+13. Random-forest confusion matrix
+14. ROC curves
+15. Random-forest feature importance
 
 Running `cancer_patients_eda.py` writes these plots to `figures/`. The notebook contains the same analysis with inline outputs.
 
