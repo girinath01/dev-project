@@ -6,6 +6,9 @@ Run with:
 
 from pathlib import Path
 
+import matplotlib
+
+matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -25,7 +28,6 @@ sns.set_theme(style="whitegrid", context="notebook")
 def savefig(name: str) -> None:
     plt.tight_layout()
     plt.savefig(FIGURES / name, dpi=180, bbox_inches="tight")
-    plt.show()
     plt.close()
 
 
@@ -49,7 +51,10 @@ def main() -> None:
     print((df["diagnosis"].value_counts(normalize=True) * 100).round(2))
 
     plt.figure(figsize=(7, 5))
-    sns.countplot(data=df, x="diagnosis", order=["malignant", "benign"], palette="Set2")
+    sns.countplot(
+        data=df, x="diagnosis", hue="diagnosis", order=["malignant", "benign"],
+        palette="Set2", legend=False
+    )
     plt.title("Diagnostic class distribution")
     plt.xlabel("Diagnosis")
     plt.ylabel("Number of observations")
