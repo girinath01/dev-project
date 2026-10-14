@@ -19,7 +19,7 @@ The local CSV is included so the analysis is reproducible without requiring Kagg
 - `cancer_patients_eda.py` — complete executable analysis
 - `cancer_patients_eda.ipynb` — notebook presentation
 - `report.md` — supporting report with methodology, observations, and limitations
-- `data/cancer_regression.csv` — large dataset used by the analysis
+- `data/cancer_regression.csv` — local dataset used by the analysis; intentionally excluded from Git
 - `requirements.txt` — Python dependencies
 - `figures/` — generated visualization resources
 
