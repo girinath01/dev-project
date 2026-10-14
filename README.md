@@ -30,21 +30,21 @@ The notebook records the dataset shape, feature names, class distribution, missi
 
 The generated image resources are available directly on GitHub:
 
-1. [Diagnostic class distribution](figures/01_class_distribution.png)
-2. [Feature distributions by diagnosis](figures/02_feature_distributions.png)
-3. [Mean-radius boxplot](figures/03_boxplot_mean_radius.png)
-4. [Radius/perimeter scatter plot](figures/04_radius_perimeter_scatter.png)
-5. [Correlation heatmap](figures/05_correlation_heatmap.png)
-6. [PCA projection](figures/06_pca_projection.png)
-7. [Pair plot](figures/07_pairplot_selected_features.png)
-8. [Grouped mean-radius chart](figures/08_grouped_mean_radius_ci.png)
-9. [Grouped concavity violin plot](figures/09_grouped_violin_concavity.png)
-10. [PCA cumulative variance](figures/10_pca_cumulative_variance.png)
-11. [LDA projection](figures/11_lda_projection.png)
-12. [t-SNE projection](figures/12_tsne_projection.png)
-13. [Random-forest confusion matrix](figures/13_random_forest_confusion_matrix.png)
-14. [ROC curves](figures/14_roc_curves.png)
-15. [Random-forest feature importance](figures/15_random_forest_feature_importance.png)
+1. [Diagnostic class distribution](figures/class-distribution.png)
+2. [Feature distributions](figures/feature-distributions.png)
+3. [Mean-radius boxplot](figures/radius-boxplot.png)
+4. [Radius/perimeter scatter plot](figures/radius-perimeter-scatter.png)
+5. [Correlation heatmap](figures/correlation-heatmap.png)
+6. [PCA projection](figures/pca-projection.png)
+7. [Pair plot](figures/pair-plot.png)
+8. [Grouped mean-radius chart](figures/grouped-radius-chart.png)
+9. [Concavity violin plot](figures/concavity-violin-plot.png)
+10. [PCA explained variance](figures/pca-variance.png)
+11. [LDA projection](figures/lda-projection.png)
+12. [t-SNE projection](figures/tsne-projection.png)
+13. [Confusion matrix](figures/confusion-matrix.png)
+14. [ROC curves](figures/roc-curves.png)
+15. [Feature importance](figures/feature-importance.png)
 
 ## How to run
 

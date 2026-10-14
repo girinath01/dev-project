@@ -72,7 +72,7 @@ def main() -> None:
     plt.title("Diagnostic class distribution")
     plt.xlabel("Diagnosis")
     plt.ylabel("Number of observations")
-    savefig("01_class_distribution.png")
+    savefig("class-distribution.png")
 
     # Unit 2: descriptive statistics and univariate exploration
     feature_cols = dataset.feature_names.tolist()
@@ -89,14 +89,14 @@ def main() -> None:
                      stat="density", common_norm=False, element="step", ax=ax)
         ax.set_title(feature.title())
     fig.suptitle("Feature distributions by diagnosis", y=1.02)
-    savefig("02_feature_distributions.png")
+    savefig("feature-distributions.png")
 
     plt.figure(figsize=(10, 6))
     sns.boxplot(data=df, x="diagnosis", y="mean radius", order=["malignant", "benign"])
     sns.stripplot(data=df, x="diagnosis", y="mean radius", order=["malignant", "benign"],
                   color="black", alpha=0.25, size=3)
     plt.title("Mean radius by diagnosis")
-    savefig("03_boxplot_mean_radius.png")
+    savefig("radius-boxplot.png")
 
     # Unit 3: bivariate analysis
     group_means = df.groupby("diagnosis")[selected].mean().T
@@ -107,7 +107,7 @@ def main() -> None:
     sns.scatterplot(data=df, x="mean radius", y="mean perimeter",
                     hue="diagnosis", style="diagnosis", alpha=0.75, palette="Set1")
     plt.title("Mean radius and mean perimeter")
-    savefig("04_radius_perimeter_scatter.png")
+    savefig("radius-perimeter-scatter.png")
 
     corr_features = [
         "mean radius", "mean texture", "mean perimeter", "mean area",
@@ -118,7 +118,7 @@ def main() -> None:
     plt.figure(figsize=(11, 8))
     sns.heatmap(corr, cmap="coolwarm", center=0, annot=True, fmt=".2f", square=True)
     plt.title("Correlation matrix for mean measurements")
-    savefig("05_correlation_heatmap.png")
+    savefig("correlation-heatmap.png")
 
     # Unit 5 lecture topic: pair plots for multiple-variable relationships.
     pair_features = ["mean radius", "mean texture", "mean perimeter",
@@ -134,7 +134,7 @@ def main() -> None:
         height=1.8,
     )
     pair_grid.figure.suptitle("Pair plot of selected measurements", y=1.02)
-    pair_grid.figure.savefig(FIGURES / "07_pairplot_selected_features.png",
+    pair_grid.figure.savefig(FIGURES / "pair-plot.png",
                              dpi=180, bbox_inches="tight")
     plt.close(pair_grid.figure)
 
@@ -152,14 +152,14 @@ def main() -> None:
                 errorbar=("ci", 95), capsize=0.1, legend=False)
     plt.title("Mean radius by diagnosis with 95% confidence intervals")
     plt.ylabel("Mean radius")
-    savefig("08_grouped_mean_radius_ci.png")
+    savefig("grouped-radius-chart.png")
 
     plt.figure(figsize=(8, 5))
     sns.violinplot(data=df, x="diagnosis", y="mean concavity",
                    hue="diagnosis", order=["malignant", "benign"],
                    palette="Set2", inner="quart", legend=False)
     plt.title("Mean concavity distribution by diagnosis")
-    savefig("09_grouped_violin_concavity.png")
+    savefig("concavity-violin-plot.png")
 
     # Unit 5 lecture topic: dimensionality reduction for visualization.
     X = df[feature_cols]
@@ -177,7 +177,7 @@ def main() -> None:
     sns.scatterplot(data=pca_df, x="PC1", y="PC2", hue="diagnosis",
                     style="diagnosis", palette="Set1", alpha=0.8)
     plt.title("PCA projection after standardization")
-    savefig("06_pca_projection.png")
+    savefig("pca-projection.png")
 
     pca_full = PCA().fit(X_scaled)
     cumulative_variance = np.cumsum(pca_full.explained_variance_ratio_)
@@ -193,7 +193,7 @@ def main() -> None:
     plt.ylabel("Cumulative explained variance")
     plt.title("PCA cumulative explained variance")
     plt.legend()
-    savefig("10_pca_cumulative_variance.png")
+    savefig("pca-variance.png")
 
     lda = LinearDiscriminantAnalysis(n_components=1)
     X_lda = lda.fit_transform(X_scaled, y)
@@ -203,7 +203,7 @@ def main() -> None:
                   order=["malignant", "benign"], palette="Set1",
                   alpha=0.75, legend=False)
     plt.title("LDA supervised projection")
-    savefig("11_lda_projection.png")
+    savefig("lda-projection.png")
     print("LDA explained variance ratio:", np.round(lda.explained_variance_ratio_, 4))
 
     tsne = TSNE(n_components=2, perplexity=30, init="pca",
@@ -215,7 +215,7 @@ def main() -> None:
     sns.scatterplot(data=tsne_df, x="TSNE1", y="TSNE2", hue="diagnosis",
                     style="diagnosis", palette="Set1", alpha=0.8)
     plt.title("t-SNE projection (perplexity=30, seed=42)")
-    savefig("12_tsne_projection.png")
+    savefig("tsne-projection.png")
     tsne_labels = pd.Categorical(df["diagnosis"]).codes
     print("t-SNE silhouette score (visual diagnostic only):",
           round(float(silhouette_score(X_tsne, tsne_labels)), 3))
@@ -268,7 +268,7 @@ def main() -> None:
         y_test, y_pred, display_labels=dataset.target_names, cmap="Blues"
     )
     plt.title("Random forest confusion matrix")
-    savefig("13_random_forest_confusion_matrix.png")
+    savefig("confusion-matrix.png")
 
     plt.figure(figsize=(8, 6))
     for name, model in models.items():
@@ -276,7 +276,7 @@ def main() -> None:
     plt.plot([0, 1], [0, 1], "k--", label="Chance")
     plt.title("ROC curves")
     plt.legend(loc="lower right")
-    savefig("14_roc_curves.png")
+    savefig("roc-curves.png")
 
     importance = pd.Series(
         models["Random forest"].feature_importances_, index=feature_cols
@@ -287,7 +287,7 @@ def main() -> None:
     importance.sort_values().plot.barh(color="teal")
     plt.xlabel("Importance")
     plt.title("Top eight random-forest features")
-    savefig("15_random_forest_feature_importance.png")
+    savefig("feature-importance.png")
 
     # Exploratory association ranking, not a clinical risk score.
     top_correlations = (
