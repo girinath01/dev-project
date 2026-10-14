@@ -1,127 +1,93 @@
-# Exploratory Data Analysis and Visualization of Cancer Patients Data
+# Exploratory Data Analysis and Visualization of Large-Scale Cancer Data
 
 ## 1. Abstract
 
-This capstone project explores the **Wisconsin Diagnostic Breast Cancer (WDBC)** dataset using Python. The dataset contains 569 observations and 30 numeric features derived from digitized images of fine needle aspirate (FNA) samples. Each observation is labeled malignant or benign. The analysis examines data quality, distributions, diagnostic group differences, correlations, outliers, and a two-dimensional PCA representation.
+This project analyzes a large county-level cancer dataset containing 3,047 U.S. counties. The dataset combines cancer incidence and mortality measures with socioeconomic, demographic, employment, education, insurance, and population variables. The analysis follows the five-unit Data Exploration and Visualization workflow and applies the Unit V lecture topics: multivariate relationships, grouped visualizations, dimensionality reduction, and scikit-learn model development.
 
-The main exploratory finding is that measurements related to size and boundary complexity (for example, radius, perimeter, area, concavity, and concave points) tend to show stronger separation between the two diagnostic groups than texture or smoothness alone. This is an association in an historical research dataset, not a medical conclusion.
+The target variable, `TARGET_deathRate`, is a continuous county cancer mortality rate. The analysis is predictive and exploratory; it does not diagnose patients or estimate individual survival.
 
-## 2. Dataset and supporting source
+## 2. Dataset and source
 
-- **Dataset:** Wisconsin Diagnostic Breast Cancer (WDBC)
-- **Observations:** 569
-- **Predictor variables:** 30 real-valued measurements
-- **Target:** malignant or benign
-- **Source:** [UCI Machine Learning Repository — Breast Cancer Wisconsin (Diagnostic)](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic)
-- **Software interface:** [`sklearn.datasets.load_breast_cancer`](https://scikit-learn.org/stable/modules/generated/sklearn.datasets.load_breast_cancer.html)
+- **Dataset:** Health Outcomes and Socioeconomic Factors / Cancer Regression dataset
+- **Rows:** 3,047 county-level observations
+- **Variables:** cancer outcomes, population, income, poverty, education, employment, insurance, demographics, and geography
+- **Target:** `TARGET_deathRate`
+- **Kaggle source:** [Health Outcomes and Socioeconomic Factors](https://www.kaggle.com/datasets/thedevastator/uncovering-trends-in-health-outcomes-and-socioeconomic)
+- **Local file:** `data/cancer_regression.csv`
 
-The features are computed from images and are grouped into mean, standard error, and worst (largest) measurements for radius, texture, perimeter, area, smoothness, compactness, concavity, concave points, symmetry, and fractal dimension.
+The dataset is aggregated at county level. It is not a patient-level clinical dataset.
 
 ## 3. Objectives
 
-1. Understand the dataset structure and variable types.
-2. Check missing values, duplicates, class balance, and numerical ranges.
-3. Summarize and visualize individual variables.
-4. Compare distributions and relationships across diagnoses.
-5. Explore correlation, multivariate structure, standardization, and PCA.
-6. Communicate findings responsibly, including limitations and ethical considerations.
+1. Profile a large cancer-related dataset and assess data quality.
+2. Describe the distributions of mortality, incidence, and socioeconomic variables.
+3. Compare mortality across states and study bivariate relationships.
+4. Use correlation analysis, pair plots, PCA, and t-SNE for multivariate exploration.
+5. Build and compare regression models using leakage-safe scikit-learn pipelines.
+6. Report limitations and avoid unsupported clinical interpretation.
 
-## 4. Methodology mapped to the five units
+## 4. Methodology
 
-### Unit 1 — Data acquisition, structure, and quality
+### Unit 1 — Data loading and quality
 
-The data is loaded using scikit-learn with a fixed random state used later for the split. The analysis prints the shape, sample rows, data types, missing-value count, duplicate count, and class distribution. A diagnosis label is added for readable plots.
+The CSV is loaded from the repository. An accidental unnamed index column is removed, and the state is extracted from the geography field. The script prints dimensions, sample rows, data types, missing values, duplicate rows, and the number of states represented.
 
-**Observation:** The dataset is entirely numeric apart from the derived diagnosis label. The quality checks should show no missing values in the packaged dataset. The class distribution is not perfectly balanced, so percentages are reported alongside counts and stratification is used for the later split.
+### Unit 2 — Descriptive and univariate analysis
 
-### Unit 2 — Descriptive statistics and univariate analysis
+The script calculates count, mean, standard deviation, quartiles, minimum, maximum, and IQR for numeric columns. Histograms and KDE curves show mortality, incidence, median income, and poverty distributions.
 
-`DataFrame.describe()` is used for count, mean, standard deviation, quartiles, minimum, and maximum. The interquartile range is added to the summary table. Histograms with density curves show the distributions of six representative mean features. A boxplot plus jittered observations shows how mean radius varies by diagnosis.
+### Unit 3 — Bivariate and grouped analysis
 
-**Observation:** Size-related features generally have wider ranges and visibly different centers for malignant and benign observations. Boxplots also make potential extreme values visible. An extreme value is not automatically an error; it must be interpreted in the context of the measurement process.
+State-level count, mean, median, and standard deviation are calculated. A boxplot compares the ten states with the highest mean mortality. A bubble scatter plot compares incidence and mortality, with bubble size representing population and color representing poverty. A masked Pearson correlation heatmap avoids repeating the same pair above and below the diagonal.
 
-### Unit 3 — Bivariate analysis
+### Unit 4 — Multivariate analysis and dimensionality reduction
 
-Group means are calculated by diagnosis. A scatter plot compares mean radius with mean perimeter, while a heatmap shows correlations among ten mean measurements.
+Numeric features are median-imputed and standardized before PCA and t-SNE. PCA is used for a quick linear projection and cumulative-variance analysis. t-SNE is used only for visual exploration with `perplexity=30` and `random_state=42`. t-SNE distances and cluster sizes must not be interpreted as clinical or geographic effects.
 
-**Observation:** Mean radius and mean perimeter have a strong positive relationship because both measure lesion size. Strong correlations among radius, perimeter, and area indicate multicollinearity. This is useful for exploration but means that a predictive model should not interpret each correlated coefficient as an independent causal effect.
+### Unit 5 — Scikit-learn model development
 
-### Unit 4 — Multivariate analysis and preprocessing
+The continuous mortality target is modeled with Ridge regression and Random Forest regression. The data is split before final testing. Imputation, scaling, and one-hot encoding are inside a `ColumnTransformer` pipeline, preventing leakage during cross-validation. Five-fold shuffled cross-validation reports RMSE. `GridSearchCV` tunes Ridge alpha. Test metrics include MAE, RMSE, and R².
 
-All 30 predictors are standardized before PCA so variables with large raw units do not dominate the result. A two-component PCA scatter plot displays multivariate structure. A stratified 80/20 split is demonstrated, and the scaler is fit only on the training data to avoid test-set leakage.
+## 5. Verified analysis results
 
-**Observation:** The first two principal components provide a compact visual summary and commonly show substantial separation between diagnoses. The exact explained-variance ratios and the resulting plot are printed/generated by the notebook, so the output remains reproducible across runs with the pinned environment.
+The validated run produced:
 
-### Unit 5 — Interpretation, communication, and limitations
+- Dataset shape: **3,047 rows and 35 columns** after adding the derived state field.
+- Two PCA components retain approximately **46.8%** of standardized numeric variance.
+- **17 PCA components** are needed to retain at least 95% variance.
+- t-SNE mortality-quartile silhouette score: approximately **-0.058**, indicating no strong quartile separation in this embedding.
+- Ridge cross-validation RMSE: approximately **21.471**.
+- Random Forest cross-validation RMSE: approximately **20.628**.
+- Ridge test MAE: approximately **15.179** and test RMSE: approximately **22.436**.
+- Random Forest test MAE: approximately **16.668** and test RMSE: approximately **23.526**.
 
-The notebook reports the ten features with the largest absolute correlation with a numeric diagnosis code as an exploratory ranking. This ranking is not a model, does not establish causation, and must not be used as a clinical risk score.
+These metrics describe this county-level dataset and split; they are not clinical performance measures.
 
-## 5. Unit V lecture alignment
+## 6. Main observations
 
-The supplied Unit V lecture emphasizes multivariate analysis and scikit-learn model development. The project now implements each requested area:
+- Mortality rates vary substantially across counties and states.
+- Higher poverty and lower educational attainment show meaningful associations with mortality in this aggregated dataset.
+- Incidence and mortality are positively related, but the relationship is not a complete explanation of county mortality differences.
+- The first two PCA components provide a useful visual summary but retain less than half of total standardized variance.
+- The t-SNE result does not show strong separation by mortality quartile, so a visually attractive embedding should not be over-interpreted.
+- Random Forest and Ridge provide complementary views: the forest captures nonlinear patterns, while Ridge is more interpretable and stable for a socioeconomic dataset.
 
-1. **Pair plots:** a corner pair plot compares six selected measurements and colors observations by diagnosis.
-2. **Grouped visualizations:** diagnosis-level count, mean, median, and standard deviation summaries are printed. A grouped bar chart with 95% confidence intervals and a violin plot show both summary and distribution shape.
-3. **Correlation analysis:** Pearson correlations are visualized with a fixed `-1` to `+1` diverging color scale.
-4. **Dimensionality reduction:** standardized PCA is shown in two dimensions; cumulative explained variance identifies the smallest number of components reaching 95% variance. LDA is included as a supervised class-separation view. t-SNE uses a fixed seed and perplexity 30 and is explicitly treated as a visual diagnostic rather than a predictive feature transformation.
-5. **Scikit-learn model development:** logistic regression, SVM, and random forest are compared with stratified five-fold cross-validation. The code uses pipelines so scaling is fitted within each training fold. GridSearchCV tunes an SVM, and the final evaluation includes a classification report, confusion matrix, ROC curves, ROC-AUC, and random-forest feature importance.
+## 7. Limitations and ethics
 
-The run produced these reproducible reference values:
-
-- 10 PCA components are needed to retain at least 95% cumulative variance.
-- t-SNE silhouette score is 0.466 for the fixed visualization configuration.
-- Cross-validation accuracy is approximately 0.974 for logistic regression, 0.977 for SVM, and 0.953 for random forest.
-- Test ROC-AUC is approximately 0.995 for logistic regression and SVM, and 0.994 for random forest.
-
-These values describe this dataset and split, not expected clinical performance.
-
-## 5. Visualizations included
-
-1. Diagnostic class distribution
-2. Feature distributions by diagnosis
-3. Mean-radius boxplot with individual observations
-4. Mean-radius versus mean-perimeter scatter plot
-5. Correlation heatmap
-6. Standardized PCA projection
-7. Pair plot of selected measurements
-8. Grouped mean-radius chart with confidence intervals
-9. Grouped concavity violin plot
-10. PCA cumulative explained variance
-11. LDA supervised projection
-12. t-SNE projection
-13. Random-forest confusion matrix
-14. ROC curves
-15. Random-forest feature importance
-
-Running `cancer_patients_eda.py` writes these plots to `figures/`. The notebook contains the same analysis with inline outputs.
-
-## 6. Key observations
-
-- There are many more benign than malignant observations, so accuracy alone would be an incomplete evaluation metric for any future classifier.
-- Size and shape-complexity variables show useful exploratory differences between diagnostic groups.
-- Several predictors are strongly correlated, especially measurements that describe related geometric properties.
-- Standardization is necessary before PCA because the variables have different scales.
-- PCA is helpful for visualization, but reducing 30 variables to two necessarily loses information.
-- The analysis describes patterns in the dataset; it does not diagnose individual patients.
-
-## 7. Limitations and ethical considerations
-
-- The dataset is historical and may not represent current clinical populations, imaging equipment, or demographic groups.
-- The observations are derived image measurements, not a complete clinical record.
-- The labels and feature-generation process come from the source dataset and are treated as given.
-- Correlation and visual separation do not demonstrate causation.
-- No model from this assignment should be deployed for medical decisions without clinical validation, calibration, fairness assessment, regulatory review, and appropriate privacy safeguards.
+- County-level relationships cannot be used to infer individual patient outcomes; this is the ecological fallacy risk.
+- The dataset is historical and may not represent current populations or healthcare systems.
+- Associations do not establish causation.
+- Missing values and imputation choices can affect model results.
+- The data may contain measurement, reporting, and geographic aggregation bias.
+- No result should be used for diagnosis, treatment selection, or individual cancer-risk prediction.
 
 ## 8. Reproducibility
 
-Install the packages listed in `requirements.txt`, then run:
+Install dependencies and run:
 
 ```bash
+python -m pip install -r requirements.txt
 python cancer_patients_eda.py
 ```
 
-The notebook is `cancer_patients_eda.ipynb`. All random operations use seed `42`, and generated charts are stored in `figures/`.
-
-## 9. Conclusion
-
-The WDBC dataset is suitable for demonstrating the full EDA workflow: acquisition, quality assessment, descriptive statistics, univariate and bivariate visualization, correlation analysis, multivariate dimensionality reduction, and responsible interpretation. The strongest exploratory patterns involve lesion size and shape-complexity measurements. The findings support further supervised-learning work as an academic exercise, while the dataset's scope and clinical limitations must remain explicit.
+All random operations use seed `42`. Generated figures are stored in `figures/`, and the notebook provides a presentation-friendly entry point.
