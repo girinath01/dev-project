@@ -22,6 +22,7 @@ The notebook records the dataset shape, feature names, class distribution, missi
 
 - `cancer_patients_eda.ipynb` — executable analysis notebook with outputs/visualizations
 - `cancer_patients_eda.py` — equivalent Python script for reproducible execution
+- `data/breast_cancer_wdbc.csv` — CSV export of the WDBC dataset used by the analysis
 - `report.md` — supporting report with methodology, observations, limitations, and conclusions
 - `requirements.txt` — Python dependencies
 - `figures/` — generated plots after running the notebook or script
